@@ -4,52 +4,6 @@ const supportFlow = require("./support.flow");
 const renewalFlow = require("./renewal.flow");
 const sessionStore = require("../utils/session.store");
 
-// exports.handleText = async (number, text) => {
-//   const session = sessionStore.getSession(number);
-//   const lower = text.toLowerCase().trim();
-
-//   // MENU RESET
-//   if (lower === "menu") {
-//     sessionStore.clearSession(number);
-//     return sendWelcome(number);
-//   }
-
-//   // PRIMARY KEYWORDS
-//   // if (["hi", "hello", "hiiiiii", "hii", "hey"].includes(lower)) {
-//   //   return sendWelcome(number);
-//   // }
-//   if (["impressivebot"].includes(lower)) {
-//     return sendWelcome(number);
-//   }
-
-//   // MAIN MENU OPTIONS
-//   if (["1", "2", "3", "4"].includes(lower)) {
-//     switch (lower) {
-//       case "1":
-//         return supportFlow.startSupport(number);
-//       case "2":
-//         return renewalFlow.startRenewal(number);
-//       case "3":
-//         return talkToTeam(number);
-//       case "4":
-//         return celitixService.sendText(
-//           number,
-//           "Please briefly describe your requirement.",
-//         );
-//     }
-//   }
-
-//   // Support sub handling
-//   if (session.step?.startsWith("support")) {
-//     return supportFlow.handleSupportSteps(number, text);
-//   }
-
-//   return celitixService.sendText(
-//     number,
-//     "Sorry, I didn't understand that.\nPlease reply with valid option (1-4) or type MENU.",
-//   );
-// };
-
 exports.handleText = async (number, text) => {
   const lower = text.toLowerCase().trim();
 
@@ -106,11 +60,17 @@ async function sendWelcome(number) {
   await celitixService.sendText(
     number,
     `👋 Welcome to Impressive Star!
+    Glad to have you with us today. Plz wait while we search for related records of your number.
+Businesses are flourishing by doing process optimisation through ERP, HRMS, CRM, Cloud
+& Mobile Access, Tally Customisation.
 
-Support Hours: Mon–Fri, 10 AM–6 PM
+Support Hours: On Weekdays, 10:00 AM to 6:00 PM
+You can contact us directly:
 📧 support@impressivestar.com
 📞 0141-4041515
-www.impressivestar.com`,
+www.impressivestar.com
+
+Certified Solution Partner of Tally Solution since 1993`,
   );
 
   try {
@@ -138,7 +98,7 @@ How can I help you today?`,
     if (response.status === "error") {
       await celitixService.sendText(
         number,
-        `Oops! Unable to fetch any record for this number as of now.
+        `Oops! Unable to fetch any record for this number as of now. hence the list of related data can not be populated. 
 
 Please select the need from option below.`,
       );
@@ -161,8 +121,8 @@ Please choose from the options below.`,
 async function sendMainMenuList(number) {
   return celitixService.sendListMessage(
     number,
-    "How can we assist you?",
-    "Please choose an option:",
+    "How can I help you today?",
+    " Please choose an option by replying with the number:",
     "View Options",
     [
       {
@@ -194,12 +154,3 @@ async function sendMainMenuList(number) {
   );
 }
 
-async function talkToTeam(number) {
-  await celitixService.sendText(
-    number,
-    `Please provide:
-🔹 Full Name
-🔹 Company Name
-🔹 Brief Issue Description`,
-  );
-}

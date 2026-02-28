@@ -69,6 +69,7 @@ async function checkProducts(number) {
   }
 }
 
+// generate ticket direct
 // exports.handleProductSelection = async (number, productId) => {
 //   const session = sessionStore.getSession(number);
 //   const products = session.products || [];
@@ -108,6 +109,8 @@ async function checkProducts(number) {
 //   }
 // };
 
+// generate ticket with user flow submission
+
 exports.handleProductSelection = async (number, productId) => {
   const session = sessionStore.getSession(number);
   const products = session.products || [];
@@ -122,7 +125,10 @@ exports.handleProductSelection = async (number, productId) => {
 
   // store selected product in session
   session.selectedProduct = selectedProduct;
-  sessionStore.setSession(number, session);
+  await celitixService.sendText(
+    number,
+    `Found following products & contracts for ${selectedProduct}.`,
+  );
 
   // 🔥 SEND FLOW INSTEAD OF CREATING TICKET
   return celitixService.sendFlowMessage(
@@ -131,7 +137,7 @@ exports.handleProductSelection = async (number, productId) => {
     "Please fill in the support details.",
     "Impressive Star Support",
     "navigate",
-    "1413382917185257", // hardcode for now
+    "2144483762964142", // hardcode for now
     "Open Form",
     "WELCOME",
   );
