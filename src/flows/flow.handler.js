@@ -59,6 +59,7 @@ exports.handleFlowResponse = async (number, flowReply) => {
 
     if (ticketResponse.status === "success") {
       const caseId = ticketResponse.data.case_id;
+      const case_number = ticketResponse.data.case_number;
 
       const currentDate = new Date().toLocaleString("en-IN", {
         dateStyle: "medium",
@@ -69,7 +70,8 @@ exports.handleFlowResponse = async (number, flowReply) => {
         number,
         `✅ *Support Ticket Generated Successfully!*\n\n` +
           `• *Product:* ${selectedProduct}\n` +
-          `• *Ticket ID:* ${caseId}\n` +
+          // `• *Ticket ID:* ${caseId}\n` +
+          `• *Ticket ID:* ${case_number}\n` +
           `• *Date:* ${currentDate}\n\n` +
           `Our technical team will get in touch with you shortly.`,
       );

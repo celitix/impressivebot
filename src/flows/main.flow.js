@@ -23,7 +23,7 @@ exports.handleText = async (number, text) => {
     return renewalFlow.startRenewal(number);
   }
 
-  return celitixService.sendText(number, "Please type Hi to start.");
+  // return celitixService.sendText(number, "Please type Hi to start.");
 };
 
 exports.handleList = async (number, listId) => {
