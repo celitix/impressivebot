@@ -11,12 +11,12 @@ exports.handleText = async (number, text) => {
   const lower = text.toLowerCase().trim();
 
   // PRIMARY KEYWORDS
-  // if (["hi", "hello", "hiiiiii", "hii", "hey"].includes(lower)) {
-  //   return sendWelcome(number);
-  // }
-  if (["impressivebot"].includes(lower)) {
+  if (["hi", "hello", "hiiiiii", "hii", "hey"].includes(lower)) {
     return sendWelcome(number);
   }
+  // if (["impressivebot"].includes(lower)) {
+  //   return sendWelcome(number);
+  // }
 
   if (["help", "support"].includes(lower)) {
     return supportFlow.startSupport(number);
@@ -137,7 +137,8 @@ To assist you better, kindly fill out the short form below so our team can under
         "Please share your details so we can assist you.",
         "Impressive Star",
         "navigate",
-        "2144483762964142",
+        // "2144483762964142",
+        "2068747380648091",
         "Fill Form",
         "WELCOME",
       );
