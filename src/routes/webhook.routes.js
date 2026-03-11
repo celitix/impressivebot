@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const webhookController = require("../controllers/webhook.controller");
 
-router.post("/celitix", webhookController.handleIncoming);
+router.post("/supportbot", webhookController.handleIncoming);
 
 const celitixService = require("../services/celitix.service");
 
