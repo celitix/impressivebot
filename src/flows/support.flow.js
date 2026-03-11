@@ -70,6 +70,7 @@ async function checkProducts(number) {
 }
 
 // generate ticket direct
+
 // exports.handleProductSelection = async (number, productId) => {
 //   const session = sessionStore.getSession(number);
 //   const products = session.products || [];
@@ -125,19 +126,20 @@ exports.handleProductSelection = async (number, productId) => {
 
   // store selected product in session
   session.selectedProduct = selectedProduct;
+  session.flowType = "support_ticket";
+
   await celitixService.sendText(
     number,
     `Found following products & contracts for ${selectedProduct}.`,
   );
 
-  // 🔥 SEND FLOW INSTEAD OF CREATING TICKET
   return celitixService.sendFlowMessage(
     number,
     "Support Form",
     "Please fill in the support details.",
     "Impressive Star Support",
     "navigate",
-    "2144483762964142", // hardcode for now
+    "2144483762964142",
     "Open Form",
     "WELCOME",
   );

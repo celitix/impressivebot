@@ -3,7 +3,10 @@ const crmService = require("../services/crm.service");
 const supportFlow = require("./support.flow");
 const renewalFlow = require("./renewal.flow");
 const sessionStore = require("../utils/session.store");
+const newRequirementFlow = require("./newRequirement.flow");
+const otherNeedFlow = require("./otherNeed.flow");
 
+// if client need different key word to target the flow then we can use this handler to trigger the flow instead of list message. for ex - if user types "support" then we can directly trigger support flow without sending the list message.
 exports.handleText = async (number, text) => {
   const lower = text.toLowerCase().trim();
 
@@ -33,6 +36,10 @@ exports.handleList = async (number, listId) => {
     return supportFlow.handleProductSelection(number, listId);
   }
 
+  if (listId.startsWith("category_")) {
+    return newRequirementFlow.handleCategorySelection(number, listId);
+  }
+
   switch (listId) {
     case "support":
       return supportFlow.startSupport(number);
@@ -41,13 +48,10 @@ exports.handleList = async (number, listId) => {
       return renewalFlow.startRenewal(number);
 
     case "new_requirement":
-      return newRequirementFlow.start(number);
+      return newRequirementFlow.startNewRequirement(number);
 
     case "other":
-      return celitixService.sendText(
-        number,
-        "Please describe your requirement.",
-      );
+      return otherNeedFlow.startOtherNeed(number);
 
     default:
       return celitixService.sendText(number, "Invalid selection.");
@@ -95,15 +99,48 @@ How can I help you today?`,
     }
 
     // CASE C → No Record Found
+    //     if (response.status === "error") {
+    //       await celitixService.sendText(
+    //         number,
+    //         `Oops! Unable to fetch any record for this number as of now. hence the list of related data can not be populated.
+
+    // Please select the need from option below.`,
+    //       );
+
+    //       return sendMainMenuList(number);
+    //     }
     if (response.status === "error") {
       await celitixService.sendText(
         number,
-        `Oops! Unable to fetch any record for this number as of now. hence the list of related data can not be populated. 
+        `⚠️ We could not locate any existing record associated with this number in our system.
 
-Please select the need from option below.`,
+As a result, the related account details could not be retrieved.
+
+To assist you better, kindly fill out the short form below so our team can understand your requirement and get back to you promptly.`,
       );
 
-      return sendMainMenuList(number);
+      // Reset previous session
+      sessionStore.clearSession(number);
+
+      const session = sessionStore.getSession(number);
+
+      // store flow context
+      session.flowType = "lead_capture";
+
+      sessionStore.setSession(number, session);
+
+      console.log("SESSION AFTER LEAD FLOW SET:", session);
+
+      return celitixService.sendFlowMessage(
+        number,
+        "New Enquiry Form",
+        "Please share your details so we can assist you.",
+        "Impressive Star",
+        "navigate",
+        "2144483762964142",
+        "Fill Form",
+        "WELCOME",
+      );
     }
   } catch (error) {
     console.error("❌ CRM Error:", error.message);
@@ -153,4 +190,3 @@ async function sendMainMenuList(number) {
     ],
   );
 }
-
