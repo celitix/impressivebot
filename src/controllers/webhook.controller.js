@@ -19,6 +19,21 @@ exports.handleIncoming = async (req, res) => {
       return res.sendStatus(200);
     }
 
+    // const metadata = value.metadata || {};
+    // const phoneNumberId = metadata.phone_number_id;
+    // const displayPhoneNumber = metadata.display_phone_number;
+
+    // console.log("Phone Number ID:", phoneNumberId);
+    // console.log("Display Number:", displayPhoneNumber);
+
+    // if (
+    //   phoneNumberId !== process.env.CELITIX_PHONE_NUMBER_ID ||
+    //   displayPhoneNumber !== process.env.CELITIX_DISPLAY_NUMBER
+    // ) {
+    //   console.log("Ignored webhook from unknown WhatsApp account");
+    //   return res.sendStatus(200);
+    // }
+
     const message = value.messages?.[0];
 
     if (!message) {
@@ -59,7 +74,7 @@ exports.handleIncoming = async (req, res) => {
 
       console.log("Interactive Type:", interactiveType);
 
-      // 🔥 FLOW SUBMISSION HANDLER
+      // FLOW SUBMISSION HANDLER
       if (interactiveType === "nfm_reply") {
         console.log("Flow Response Received");
 

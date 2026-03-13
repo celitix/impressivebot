@@ -41,7 +41,7 @@ exports.handleList = async (number, listId) => {
   }
 
   switch (listId) {
-    case "support":
+  case "support":
       return supportFlow.startSupport(number);
 
     case "renewal":
@@ -78,11 +78,11 @@ Certified Solution Partner of Tally Solution since 1993`,
   );
 
   try {
-    console.log("🔍 Checking CRM for:", number);
+    console.log("Checking CRM for:", number);
 
     const response = await crmService.getNumberDetails(number);
 
-    console.log("📦 CRM Response:", response);
+    console.log("CRM Response:", response);
 
     // CASE A → Single Contact Found
     if (response.status === "success" && response.data?.record_name) {
@@ -90,9 +90,7 @@ Certified Solution Partner of Tally Solution since 1993`,
 
       await celitixService.sendText(
         number,
-        `Happy to have you connected Mr./Ms./M/s ${name}
-
-How can I help you today?`,
+        `Happy to have you connected Mr./Ms./M/s ${name}`,
       );
 
       return sendMainMenuList(number);
@@ -144,7 +142,7 @@ To assist you better, kindly fill out the short form below so our team can under
       );
     }
   } catch (error) {
-    console.error("❌ CRM Error:", error.message);
+    console.error("CRM Error:", error.message);
 
     await celitixService.sendText(
       number,

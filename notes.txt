@@ -1,0 +1,95 @@
+// send text message
+// {
+//     "to": "917665576953",
+//     "message": "Dynamic test message 🚀"
+// }
+// send list message
+// {
+//     "to": "917665576953",
+//     "header": "Support Products",
+//     "bodyText": "Please tell us which product you need support for:",
+//     "buttonText": "View Products",
+//     "sections": [
+//         {
+//             "title": "Available Products",
+//             "rows": [
+//                 {
+//                     "id": "product_other",
+//                     "title": "Item Not Listed",
+//                     "description": "My product is not listed here"
+//                 },
+//                 {
+//                     "id": "product_new",
+//                     "title": "Item  Listed",
+//                     "description": "My product listed here"
+//                 },
+//                 {
+//                     "id": "product_nw",
+//                     "title": "Item  Listed",
+//                     "description": "My product listed here"
+//                 }
+//             ]
+//         }
+//     ]
+// }
+// send button message
+// {
+//     "to": "917665576953",
+//     "header": {
+//         "type": "text",
+//         "text": "Workshop Details"
+//     },
+//     "bodyText": "Choose an option",
+//     "footerText": "View Products",
+//     "buttons": [
+//         {
+//             "type": "reply",
+//             "reply": {
+//                 "id": "change-button",
+//                 "title": "Change"
+//             }
+//         },
+//         {
+//             "type": "reply",
+//             "reply": {
+//                 "id": "cancel-button",
+//                 "title": "Cancel"
+//             }
+//         },
+//         {
+//             "type": "reply",
+//             "reply": {
+//                 "id": "renew-button",
+//                 "title": "Renew"
+//             }
+//         }
+//     ]
+// }
+// send cta url message
+// {
+//     "to": "917665576953",
+//     "header": {
+//         "type": "text",
+//         "text": "Workshop Details"
+//     },
+//     "bodyText": "Click below to register",
+//     "displayText": "Register Now",
+//     "url": "https://example.com/register",
+//     "footerText": "Powered by ABC"
+// }
+// send template message - with body params and header - media - image,video,document
+{
+    "to": "917665576953",
+    "templateName": "testttt",
+    "languageCode": "en",
+    // "headerMedia": {
+    //     "type": "image",
+    //     "image": {
+    //         "link": "https://m.cltx.in/upload/image/522a96cf-1338-493d-9fae-4ba847783c3f.png"
+    //     }
+    // },
+    "bodyParams": [
+        // "Harish",
+        // "123456"
+    ]
+}

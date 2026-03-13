@@ -7,7 +7,7 @@ const COOKIE = process.env.CRM_COOKIE;
 // 919737274363
 // exports.getNumberDetails = async (number) => {
 //   const response = await axios.post(
-//     `${BASE_URL}?entryPoint=DT_Whatsapp_From_Boat&eventType=getNumberDetails&number=919737274363`,
+//     `${BASE_URL}?entryPoint=DT_Whatsapp_From_Boat&eventType=getNumberDetails&number=919737274362`,
 //     {},
 //     { headers: { Cookie: COOKIE } },
 //   );
