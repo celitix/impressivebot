@@ -41,7 +41,7 @@ exports.handleList = async (number, listId) => {
   }
 
   switch (listId) {
-  case "support":
+    case "support":
       return supportFlow.startSupport(number);
 
     case "renewal":
@@ -87,6 +87,9 @@ Certified Solution Partner of Tally Solution since 1993`,
     // CASE A → Single Contact Found
     if (response.status === "success" && response.data?.record_name) {
       const name = response.data.record_name;
+      const session = sessionStore.getSession(number);
+      session.recordName = name;
+      sessionStore.setSession(number, session);
 
       await celitixService.sendText(
         number,
@@ -136,7 +139,9 @@ To assist you better, kindly fill out the short form below so our team can under
         "Impressive Star",
         "navigate",
         // "2144483762964142",
-        "2068747380648091",
+        // "2068747380648091",
+        // "1243209594101965", // impressivebotall - proactive acc
+        "927781539976072", // impressivebotall - impressive acc
         "Fill Form",
         "WELCOME",
       );
@@ -158,7 +163,7 @@ async function sendMainMenuList(number) {
   return celitixService.sendListMessage(
     number,
     "How can I help you today?",
-    " Please choose an option by replying with the number:",
+    "Please choose an option from the list below:",
     "View Options",
     [
       {

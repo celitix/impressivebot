@@ -15,7 +15,7 @@ exports.startOtherNeed = async (number) => {
     number,
     `Thank you for reaching out to *Impressive Star*.
 
-If your requirement does not fall under the listed categories, please share the details with us by filling out the short form below. Our team will review your request and connect with you shortly to assist you further.`,
+Please share the details with us by filling out the short form below. Our team will review your request and connect with you shortly to assist you further.`,
   );
 
   return celitixService.sendFlowMessage(
@@ -23,8 +23,11 @@ If your requirement does not fall under the listed categories, please share the 
     "Other Requirement Form",
     "Please provide details about your request.",
     "Impressive Star",
+    "navigate",
     // "2144483762964142",
-    "2068747380648091",
+    // "2068747380648091",
+    // "1243209594101965", // impressivebotall - proactive acc
+    "927781539976072", // impressivebotall - impressive acc
     "Open Form",
     "WELCOME",
   );

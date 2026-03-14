@@ -25,6 +25,7 @@ async function checkProducts(number) {
 
       // store in session
       const session = sessionStore.getSession(number);
+      const name = session.recordName || "";
       session.products = products;
       sessionStore.setSession(number, session);
 
@@ -36,8 +37,8 @@ async function checkProducts(number) {
 
       return celitixService.sendListMessage(
         number,
-        "Support Products",
         "Please tell us which product you need support for:",
+        `Found following products & contracts for ${name}`,
         "View Products",
         [
           {
@@ -128,10 +129,10 @@ exports.handleProductSelection = async (number, productId) => {
   session.selectedProduct = selectedProduct;
   session.flowType = "support_ticket";
 
-  await celitixService.sendText(
-    number,
-    `Found following products & contracts for ${selectedProduct}.`,
-  );
+  // await celitixService.sendText(
+  //   number,
+  //   `Found following products & contracts for ${selectedProduct}.`,
+  // );
 
   return celitixService.sendFlowMessage(
     number,
@@ -140,7 +141,9 @@ exports.handleProductSelection = async (number, productId) => {
     "Impressive Star Support",
     "navigate",
     // "2144483762964142",
-    "2068747380648091",
+    // "2068747380648091",
+    // "1243209594101965", // impressivebotall - proactive acc
+    "927781539976072", // impressivebotall - impressive acc
     "Open Form",
     "WELCOME",
   );
