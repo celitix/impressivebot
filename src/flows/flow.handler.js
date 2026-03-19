@@ -98,13 +98,7 @@ async function handleSupportTicket(number, session, responseData) {
 
   await celitixService.sendText(number, formattedDetails);
 
-  // const ticketResponse = await crmService.createTicket(
-  //   description,
-  //   number,
-  //   selectedProduct,
-  // );
-
-  const ticketResponse = await crmService.createTicket({
+  const ticketPayload = {
     description: responseData.textArea_one,
     number: number,
     product: selectedProduct,
@@ -114,7 +108,10 @@ async function handleSupportTicket(number, session, responseData) {
     email: responseData.textInput_four,
     tallySerialNo: responseData.textInput_five,
     gstNo: responseData.textInput_six,
-  });
+    menuAction: "SUPPORT_NEEDED_FORM",
+  };
+  console.log(ticketPayload)
+  const ticketResponse = await crmService.createTicket(ticketPayload);
 
   if (ticketResponse.status === "success") {
     const case_number = ticketResponse.data.case_number;
@@ -140,44 +137,13 @@ async function handleSupportTicket(number, session, responseData) {
   );
 }
 
-// handle lead capture flow submission
+// handle lead capture when no contact found flow submission
 async function handleLeadCapture(number, responseData) {
-  // const name = responseData.name || "";
-  // const email = responseData.email || "";
-
-  // const formatLabel = (key) => {
-  //   return key
-  //     .replace(/_/g, " ")
-  //     .replace(/\b\w/g, (char) => char.toUpperCase());
-  // };
-
-  // let description = "";
-
-  // Object.entries(responseData).forEach(([key, value]) => {
-  //   if (key !== "flow_token") {
-  //     const label = formatLabel(key);
-
-  //     description += `${label}: ${value}\n`;
-  //   }
-  // });
-
-  // let formattedUserDetails = "*User Submitted Details:*\n\n";
-
-  // Object.entries(responseData).forEach(([key, value]) => {
-  //   if (key !== "flow_token") {
-  //     const label = formatLabel(key);
-
-  //     description += `${label}: ${value}\n`;
-  //     // formattedUserDetails += `• *${label}:* ${value}\n`;
-  //     formattedUserDetails += `• ${value}\n`;
-  //   }
-  // });
   const { formattedDetails } = formatFlowData(responseData);
 
   await celitixService.sendText(number, formattedDetails);
 
-  // await crmService.createLeadNoContactFound(name, email, description, number);
-  await crmService.createLeadNoContactFound({
+  const buildLeadPayload = {
     name: responseData.textInput_one,
     email: responseData.textInput_four,
     description: responseData.textArea_one,
@@ -186,7 +152,11 @@ async function handleLeadCapture(number, responseData) {
     companyName: responseData.textInput_two,
     tallySerialNo: responseData.textInput_five,
     gstNo: responseData.textInput_six,
-  });
+    menuAction: "CONTACT_NOT_FOUND_FORM",
+  };
+  console.log(buildLeadPayload);
+  const response = await crmService.createLeadNoContactFound(buildLeadPayload);
+  console.log("createLeadNoContactFound - response",response)
 
   sessionStore.clearSession(number);
 
@@ -200,26 +170,11 @@ Our team has received your request and will reach out to you shortly.`,
 
 // handle renewal request flow submission
 async function handleRenewalRequest(number, responseData) {
-  // const formatLabel = (key) =>
-  //   key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-
-  // let description = "";
-  // let formattedDetails = "*Renewal Request Details:*\n\n";
-
-  // Object.entries(responseData).forEach(([key, value]) => {
-  //   if (key !== "flow_token") {
-  //     const label = formatLabel(key);
-
-  //     description += `${label}: ${value}\n`;
-  //     formattedDetails += `• ${value}\n`;
-  //   }
-  // });
   const { formattedDetails } = formatFlowData(responseData);
 
   await celitixService.sendText(number, formattedDetails);
 
-  // const response = await crmService.createTaskFromWhatsapp(number, description);
-  const response = await crmService.createTaskFromWhatsapp({
+  const renewalTaskPayload = {
     number: number,
     description: responseData.textArea_one,
     name: responseData.textInput_one,
@@ -228,7 +183,11 @@ async function handleRenewalRequest(number, responseData) {
     companyName: responseData.textInput_two,
     tallySerialNo: responseData.textInput_five,
     gstNo: responseData.textInput_six,
-  });
+    menuAction: "RENEWAL_REQUIRED_FORM",
+  };
+  console.log("taskPayload", renewalTaskPayload);
+
+  const response = await crmService.createTaskFromWhatsapp(renewalTaskPayload);
 
   console.log("Renewal Task API:", response);
 
@@ -248,30 +207,11 @@ Our team will review the details and get in touch with you shortly to assist you
 async function handleNewRequirement(number, session, responseData) {
   const selectedCategory = session.selectedCategory;
 
-  // const formatLabel = (key) =>
-  //   key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-
-  // let description = "";
-  // let formattedDetails = "*Submitted Requirement Details:*\n\n";
-
-  // Object.entries(responseData).forEach(([key, value]) => {
-  //   if (key !== "flow_token") {
-  //     const label = formatLabel(key);
-
-  //     description += `${label}: ${value}\n`;
-  //     formattedDetails += `• ${value}\n`;
-  //   }
-  // });
   const { formattedDetails } = formatFlowData(responseData);
 
   await celitixService.sendText(number, formattedDetails);
 
-  // const apiResponse = await crmService.createLeadFromWhatsapp(
-  //   number,
-  //   selectedCategory,
-  //   description,
-  // );
-  const apiResponse = await crmService.createLeadFromWhatsapp({
+  const leadPayload = {
     number: number,
     selectedCategory: selectedCategory,
     description: responseData.textArea_one,
@@ -281,7 +221,11 @@ async function handleNewRequirement(number, session, responseData) {
     companyName: responseData.textInput_two,
     tallySerialNo: responseData.textInput_five,
     gstNo: responseData.textInput_six,
-  });
+    menuAction: "NEW_REQUIREMENT_FORM",
+  };
+  console.log("new requirement payload", leadPayload);
+
+  const apiResponse = await crmService.createLeadFromWhatsapp(leadPayload);
 
   console.log("Create Lead API:", apiResponse);
 
@@ -299,39 +243,11 @@ One of our consultants will review the details and get in touch with you shortly
 
 // handle other need flow submission
 async function handleOtherNeed(number, session, responseData) {
-  // const crmService = require("../services/crm.service");
-  // const celitixService = require("../services/celitix.service");
-  // const sessionStore = require("../utils/session.store");
-
-  // const formatLabel = (key) =>
-  //   key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-
-  // let description = "Other Need From Whatsapp\n\n";
-
-  // let formattedDetails = "*Submitted Details:*\n\n";
-
-  // Object.entries(responseData).forEach(([key, value]) => {
-  //   if (key !== "flow_token") {
-  //     const label = formatLabel(key);
-
-  //     description += `${label}: ${value}\n`;
-
-  //     // formattedDetails += `• *${label}:* ${value}\n`;
-  //     formattedDetails += `• ${value}\n`;
-  //   }
-  // });
-
   const { formattedDetails } = formatFlowData(responseData);
 
-  // show submitted details to user
   await celitixService.sendText(number, formattedDetails);
 
-  // hit CRM API
-  // const apiResponse = await crmService.createTaskFromWhatsapp(
-  //   number,
-  //   description,
-  // );
-  const apiResponse = await crmService.createTaskFromWhatsapp({
+  const otherNeedTaskPayload = {
     number: number,
     description: responseData.textArea_one,
     name: responseData.textInput_one,
@@ -340,7 +256,12 @@ async function handleOtherNeed(number, session, responseData) {
     companyName: responseData.textInput_two,
     tallySerialNo: responseData.textInput_five,
     gstNo: responseData.textInput_six,
-  });
+    menuAction: "OTHER_NEED_FORM",
+  };
+  console.log("otherNeedTaskPayload other need", otherNeedTaskPayload);
+
+  const apiResponse =
+    await crmService.createTaskFromWhatsapp(otherNeedTaskPayload);
 
   console.log("Other Need Task API:", apiResponse);
 

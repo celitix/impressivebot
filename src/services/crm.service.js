@@ -37,38 +37,27 @@ exports.getProductDetails = async (number) => {
   return response.data;
 };
 
-// create ticket with description, number, product
-exports.createTicket = async (
-  description,
-  number,
-  product,
-  fullName,
-  companyName,
-  mobileNo,
-  email,
-  tallySerialNo,
-  gstNo,
-) => {
-  const response = await axios.post(
-    `${BASE_URL}?entryPoint=DT_Whatsapp_From_Boat&eventType=createTicket`,
-    {},
-    {
-      params: {
-        description,
-        number,
-        product,
-        fullName,
-        companyName,
-        mobileNo,
-        email,
-        tallySerialNo,
-        gstNo,
+// create ticket
+exports.createTicket = async (ticketData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}`,
+      {},
+      {
+        params: {
+          entryPoint: "DT_Whatsapp_From_Boat",
+          eventType: "createTicket",
+          ...ticketData,
+        },
+        headers: { Cookie: COOKIE },
       },
-      headers: { Cookie: COOKIE },
-    },
-  );
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error creating ticket:", error.message);
+    throw error;
+  }
 };
 
 // get product category with number as param
@@ -85,82 +74,71 @@ exports.getProductCategory = async (number) => {
   return response.data;
 };
 
-// create lead when no contact found with name, email, description, number
-exports.createLeadNoContactFound = async (
-  name,
-  email,
-  description,
-  number,
-  mobileNo,
-  companyName,
-  tallySerialNo,
-  gstNo,
-) => {
-  const response = await axios.post(
-    `${BASE_URL}?entryPoint=DT_Whatsapp_From_Boat&eventType=CreateLeadFromNoContactFound&name=${name}&email=${email}&description=${description}&number=${number}&mobileNo=${mobileNo}&companyName=${companyName}&tallySerialNo=${tallySerialNo}&gstNo=${gstNo}`,
-    {},
-    {
-      params: { name, email, description, number },
-      headers: { Cookie: COOKIE },
-    },
-  );
+// create lead when no contact found
+exports.createLeadNoContactFound = async (leadData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}`,
+      {},
+      {
+        params: {
+          entryPoint: "DT_Whatsapp_From_Boat",
+          eventType: "CreateLeadFromNoContactFound",
+          ...leadData,
+        },
+        headers: { Cookie: COOKIE },
+      },
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error creating lead:", error.message);
+    throw error;
+  }
 };
 
-// create task from whatsapp with number and description
-exports.createTaskFromWhatsapp = async (
-  number,
-  description,
-  name,
-  email,
-  mobileNo,
-  companyName,
-  tallySerialNo,
-  gstNo,
-) => {
-  const response = await axios.post(
-    `${BASE_URL}?entryPoint=DT_Whatsapp_From_Boat&eventType=createTaskFromWhatsapp&number=${number}&description=${description}&name=${name}&email=${email}mobileNo=${mobileNo}&companyName=${companyName}&tallySerialNo=${tallySerialNo}&gstNo=${gstNo}`,
-    {},
-    {
-      params: { number, description },
-      headers: { Cookie: COOKIE },
-    },
-  );
+// create task from whatsapp
+exports.createTaskFromWhatsapp = async (taskData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}`,
+      {},
+      {
+        params: {
+          entryPoint: "DT_Whatsapp_From_Boat",
+          eventType: "createTaskFromWhatsapp",
+          ...taskData,
+        },
+        headers: { Cookie: COOKIE },
+      },
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error creating renewal task:", error.message);
+    throw error;
+  }
 };
 
 // create lead from whatsapp with number and product category
-exports.createLeadFromWhatsapp = async (
-  number,
-  product_category,
-  description,
-  name,
-  email,
-  mobileNo,
-  companyName,
-  tallySerialNo,
-  gstNo,
-) => {
-  const response = await axios.post(
-    `${BASE_URL}?entryPoint=DT_Whatsapp_From_Boat&eventType=createLeadFromWhatsapp`,
-    {},
-    {
-      params: {
-        number,
-        product_category,
-        description,
-        name,
-        email,
-        mobileNo,
-        companyName,
-        tallySerialNo,
-        gstNo,
+exports.createLeadFromWhatsapp = async (leadData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}`,
+      {},
+      {
+        params: {
+          entryPoint: "DT_Whatsapp_From_Boat",
+          eventType: "createLeadFromWhatsapp",
+          ...leadData,
+        },
+        headers: { Cookie: COOKIE },
       },
-      headers: { Cookie: COOKIE },
-    },
-  );
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error creating lead from WhatsApp:", error.message);
+    throw error;
+  }
 };

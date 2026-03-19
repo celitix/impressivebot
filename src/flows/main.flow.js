@@ -27,6 +27,28 @@ exports.handleText = async (number, text) => {
   }
 
   // return celitixService.sendText(number, "Please type Hi to start.");
+
+  // option 1
+  //   return celitixService.sendText(
+  //     number,
+  //     `👋 Welcome to Impressive Star!
+
+  // I’m here to assist you. Please type one of the following to continue:
+
+  // • *Hi* – Start fresh
+  // • *Support* – Get technical help
+  // • *Renew* – Renewal assistance
+  // • *Sales* – New enquiries`,
+  //   );
+
+
+  // option 2
+//   return celitixService.sendText(
+//     number,
+//     `🙏 Thank you for reaching out to Impressive Star.
+
+// To get started, please type *Hi* so we can assist you with the available options.`,
+//   );
 };
 
 exports.handleList = async (number, listId) => {
