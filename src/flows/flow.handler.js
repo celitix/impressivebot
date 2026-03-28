@@ -102,12 +102,12 @@ async function handleSupportTicket(number, session, responseData) {
     description: responseData.textArea_one,
     number: number,
     product: selectedProduct,
-    fullName: responseData.textInput_one,
-    companyName: responseData.textInput_two,
-    mobileNo: responseData.textInput_three,
-    email: responseData.textInput_four,
-    tallySerialNo: responseData.textInput_five,
-    gstNo: responseData.textInput_six,
+    // fullName: responseData.textInput_one,
+    // companyName: responseData.textInput_two,
+    // mobileNo: responseData.textInput_three,
+    // email: responseData.textInput_four,
+    // tallySerialNo: responseData.textInput_five,
+    // gstNo: responseData.textInput_six,
     menuAction: "SUPPORT_NEEDED_FORM",
   };
   console.log(ticketPayload)
