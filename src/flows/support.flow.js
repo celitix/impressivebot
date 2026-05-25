@@ -113,10 +113,66 @@ async function checkProducts(number) {
 
 // generate ticket with user flow submission
 
+// exports.handleProductSelection = async (number, productId) => {
+//   const session = sessionStore.getSession(number);
+//   const products = session.products || [];
+
+//   const productIndex =
+//     parseInt(productId.replace("product_", "").replace("product", "")) - 1;
+//   const selectedProduct = products[productIndex];
+
+//   if (!selectedProduct) {
+//     return celitixService.sendText(number, "Invalid product selection.");
+//   }
+
+//   // store selected product in session
+//   session.selectedProduct = selectedProduct;
+//   session.flowType = "support_ticket";
+
+//   // await celitixService.sendText(
+//   //   number,
+//   //   `Found following products & contracts for ${selectedProduct}.`,
+//   // );
+
+//   return celitixService.sendFlowMessage(
+//     number,
+//     "Support Form",
+//     "Please fill in the support details.",
+//     "Impressive Star Support",
+//     "navigate",
+//     // "2144483762964142",
+//     // "2068747380648091",
+//     // "1243209594101965", // impressivebotall - proactive acc
+//     // "4290553851218752", // impressivebotall - impressive acc
+//     "3550445375109056", // descriptionFlow - impressive acc
+//     "Open Form",
+//     "WELCOME",
+//   );
+// };
+
 exports.handleProductSelection = async (number, productId) => {
   const session = sessionStore.getSession(number);
-  const products = session.products || [];
 
+  // HANDLE "ITEM NOT LISTED" SELECTION
+  if (productId === "product_other") {
+    session.selectedProduct = "Item Not Listed";
+    session.flowType = "support_ticket_other"; // unique flowType for this scenario
+    sessionStore.setSession(number, session);
+
+    return celitixService.sendFlowMessage(
+      number,
+      "Product Details Form",
+      "Since your product isn't listed, please fill out this quick form.",
+      "Impressive Star",
+      "navigate",
+      "4290553851218752", // impressivebotall - impressive acc
+      "Fill Form",
+      "WELCOME",
+    );
+  }
+
+  // HANDLE REGULAR PRODUCT SELECTION
+  const products = session.products || [];
   const productIndex =
     parseInt(productId.replace("product_", "").replace("product", "")) - 1;
   const selectedProduct = products[productIndex];
@@ -128,11 +184,7 @@ exports.handleProductSelection = async (number, productId) => {
   // store selected product in session
   session.selectedProduct = selectedProduct;
   session.flowType = "support_ticket";
-
-  // await celitixService.sendText(
-  //   number,
-  //   `Found following products & contracts for ${selectedProduct}.`,
-  // );
+  sessionStore.setSession(number, session);
 
   return celitixService.sendFlowMessage(
     number,
@@ -140,10 +192,6 @@ exports.handleProductSelection = async (number, productId) => {
     "Please fill in the support details.",
     "Impressive Star Support",
     "navigate",
-    // "2144483762964142",
-    // "2068747380648091",
-    // "1243209594101965", // impressivebotall - proactive acc
-    // "4290553851218752", // impressivebotall - impressive acc
     "3550445375109056", // descriptionFlow - impressive acc
     "Open Form",
     "WELCOME",

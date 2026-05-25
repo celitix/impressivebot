@@ -58,6 +58,9 @@ exports.handleFlowResponse = async (number, flowReply) => {
       case "support_ticket":
         return handleSupportTicket(number, session, responseData);
 
+      case "support_ticket_other":
+        return handleSupportTicketOther(number, session, responseData);
+
       case "lead_capture":
         return handleLeadCapture(number, responseData);
 
@@ -110,7 +113,7 @@ async function handleSupportTicket(number, session, responseData) {
     // gstNo: responseData.textInput_six,
     menuAction: "SUPPORT_NEEDED_FORM",
   };
-  console.log(ticketPayload)
+  console.log(ticketPayload);
   const ticketResponse = await crmService.createTicket(ticketPayload);
 
   if (ticketResponse.status === "success") {
@@ -156,7 +159,7 @@ async function handleLeadCapture(number, responseData) {
   };
   console.log(buildLeadPayload);
   const response = await crmService.createLeadNoContactFound(buildLeadPayload);
-  console.log("createLeadNoContactFound - response",response)
+  console.log("createLeadNoContactFound - response", response);
 
   sessionStore.clearSession(number);
 
@@ -275,5 +278,60 @@ async function handleOtherNeed(number, session, responseData) {
 Your request has been successfully submitted.
 
 Our team will review the details and get in touch with you shortly to assist you further.`,
+  );
+}
+
+// handle support ticket for "Item Not Listed"
+async function handleSupportTicketOther(number, session, responseData) {
+  const selectedProduct = session.selectedProduct || "Item Not Listed";
+
+  const { formattedDetails } = formatFlowData(responseData);
+
+  // Send captured details back to user
+  await celitixService.sendText(number, formattedDetails);
+
+  // Build the ticket payload including the extra form fields
+  const ticketPayload = {
+    description: responseData.textArea_one,
+    number: number,
+    product: selectedProduct,
+    fullName: responseData.textInput_one,
+    companyName: responseData.textInput_two,
+    mobileNo: responseData.textInput_three,
+    email: responseData.textInput_four,
+    tallySerialNo: responseData.textInput_five,
+    gstNo: responseData.textInput_six,
+    menuAction: "SUPPORT_NEEDED_FORM",
+  };
+
+  console.log("ticketPayload for Item Not Listed:", ticketPayload);
+
+  // Call create ticket API
+  const ticketResponse = await crmService.createTicket(ticketPayload);
+
+  if (ticketResponse.status === "success") {
+    const case_number = ticketResponse.data.case_number;
+
+    const currentDate = new Date().toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    sessionStore.clearSession(number);
+
+    return celitixService.sendText(
+      number,
+      `✅ *Request Submitted Successfully!*\n\n` +
+        // `• *Query Type:* ${selectedProduct}\n` +
+        `• *Query Type:* Unlisted Product/Service\n` +
+        `• *Ticket ID:* ${case_number}\n` +
+        `• *Date:* ${currentDate}\n\n` +
+        `Thank you for sharing your details. Our support team will investigate your specific product requirement and get in touch with you shortly to resolve it.`,
+    );
+  }
+
+  return celitixService.sendText(
+    number,
+    "Unable to create ticket at this time. Please try again later.",
   );
 }
