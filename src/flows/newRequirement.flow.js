@@ -45,7 +45,7 @@ To help us understand your requirements better, please select the relevant produ
     const rows = categories.slice(0, 10).map((cat, index) => ({
       id: `category_${index + 1}`,
       title: cat.length > 20 ? cat.substring(0, 20) + "..." : cat,
-      // description: cat,
+      description: cat,
     }));
 
     const sections = [
