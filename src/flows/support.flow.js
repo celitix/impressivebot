@@ -56,9 +56,36 @@ async function checkProducts(number) {
       );
     }
 
-    return celitixService.sendText(
+    // return celitixService.sendText(
+    //   number,
+    //   "No active products found for your account. Please contact support.",
+    // );
+    // No active products found
+    const session = sessionStore.getSession(number);
+
+    session.selectedProduct = "No Active Product Found";
+    session.flowType = "support_ticket_no_product";
+
+    sessionStore.setSession(number, session);
+
+    await celitixService.sendText(
       number,
-      "No active products found for your account. Please contact support.",
+      `⚠️ No active products or services were found for your account.
+
+To help us investigate your issue, please fill out the support form below.
+
+Our team will review your request and create a support ticket accordingly.`,
+    );
+
+    return celitixService.sendFlowMessage(
+      number,
+      "Support Request Form",
+      "Please share your details and issue description.",
+      "Impressive Star Support",
+      "navigate",
+      "4290553851218752", // same form used for unlisted product
+      "Fill Form",
+      "WELCOME",
     );
   } catch (error) {
     console.error("Product Error:", error.message);

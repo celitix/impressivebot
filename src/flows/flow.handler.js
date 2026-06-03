@@ -73,6 +73,9 @@ exports.handleFlowResponse = async (number, flowReply) => {
       case "other_need":
         return handleOtherNeed(number, session, responseData);
 
+      case "support_ticket_no_product":
+        return handleSupportTicketNoProduct(number, session, responseData);
+
       default:
         console.log("Unknown Flow Type:", flowType);
         return;
@@ -327,6 +330,55 @@ async function handleSupportTicketOther(number, session, responseData) {
         `• *Ticket ID:* ${case_number}\n` +
         `• *Date:* ${currentDate}\n\n` +
         `Thank you for sharing your details. Our support team will investigate your specific product requirement and get in touch with you shortly to resolve it.`,
+    );
+  }
+
+  return celitixService.sendText(
+    number,
+    "Unable to create ticket at this time. Please try again later.",
+  );
+}
+
+// handle support ticket when no active product found
+async function handleSupportTicketNoProduct(number, session, responseData) {
+  const { formattedDetails } = formatFlowData(responseData);
+
+  await celitixService.sendText(number, formattedDetails);
+
+  const ticketPayload = {
+    description: responseData.textArea_one,
+    number: number,
+    product: "No Active Product Found",
+    fullName: responseData.textInput_one,
+    companyName: responseData.textInput_two,
+    mobileNo: responseData.textInput_three,
+    email: responseData.textInput_four,
+    tallySerialNo: responseData.textInput_five,
+    gstNo: responseData.textInput_six,
+    menuAction: "SUPPORT_NEEDED_FORM",
+  };
+
+  console.log("ticketPayload for No Active Product:", ticketPayload);
+
+  const ticketResponse = await crmService.createTicket(ticketPayload);
+
+  if (ticketResponse.status === "success") {
+    const case_number = ticketResponse.data.case_number;
+
+    const currentDate = new Date().toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    sessionStore.clearSession(number);
+
+    return celitixService.sendText(
+      number,
+      `✅ *Support Request Submitted Successfully!*\n\n` +
+        `• *Query Type:* No Active Product Found\n` +
+        `• *Ticket ID:* ${case_number}\n` +
+        `• *Date:* ${currentDate}\n\n` +
+        `Thank you for sharing your details. Although no active products were found under your account, our support team has received your request and will contact you shortly.`,
     );
   }
 
